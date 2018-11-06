@@ -25,5 +25,17 @@
     }
   ],
   "author": "Eddy Verbruggen <eddyverbruggen@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RamseyInHouse/HeadsetDetection-PhoneGap-Plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/RamseyInHouse/HeadsetDetection-PhoneGap-Plugin/issues"
+  },
+  "homepage": "https://github.com/RamseyInHouse/HeadsetDetection-PhoneGap-Plugin#readme"
 }
