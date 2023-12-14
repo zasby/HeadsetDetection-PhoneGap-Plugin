@@ -1,13 +1,19 @@
 package nl.xservices.plugins;
 
+import static android.content.Context.AUDIO_SERVICE;
+
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
-
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.media.AudioDeviceCallback;
+import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -59,10 +65,34 @@ public class HeadsetDetection extends CordovaPlugin {
           }
       };
       mCachedWebView.getContext().registerReceiver(this.receiver, intentFilter);
+
+      AudioManager manager = (AudioManager) webView.getContext().getSystemService(AUDIO_SERVICE);
+      manager.registerAudioDeviceCallback(
+              new AudioDeviceCallback() {
+                  @Override
+                  public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
+                      Log.d(LOG_TAG, "onAudioDevicesAdded: ");
+                      Log.d(LOG_TAG, "Headset is connected");
+                      mCachedWebView.sendJavascript("cordova.require('cordova-plugin-headsetdetection.HeadsetDetection').remoteHeadsetAdded();");
+                      super.onAudioDevicesAdded(addedDevices);
+                  }
+
+                  @Override
+                  public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
+                      Log.d(LOG_TAG, "Headset is disconnected");
+                      Log.d(LOG_TAG, "onAudioDevicesRemoved: ");
+                      mCachedWebView.sendJavascript("cordova.require('cordova-plugin-headsetdetection.HeadsetDetection').remoteHeadsetRemoved();");
+                      super.onAudioDevicesRemoved(removedDevices);
+                  }
+              }, null
+      );
   }
+
+
 
   @Override
   public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
+      Log.d(LOG_TAG, "execute: action:" + action);
     try {
       if (ACTION_DETECT.equals(action) || ACTION_EVENT.equals(action)) {
         callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, isHeadsetEnabled()));
@@ -78,7 +108,7 @@ public class HeadsetDetection extends CordovaPlugin {
   }
 
   private boolean isHeadsetEnabled() {
-    final AudioManager audioManager = (AudioManager) cordova.getActivity().getSystemService(Context.AUDIO_SERVICE);
+    final AudioManager audioManager = (AudioManager) cordova.getActivity().getSystemService(AUDIO_SERVICE);
     return audioManager.isWiredHeadsetOn() ||
         audioManager.isBluetoothA2dpOn() ||
         audioManager.isBluetoothScoOn();
