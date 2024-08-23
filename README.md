@@ -41,6 +41,9 @@ document.addEventListener('deviceready', function() {
             case 'headsetRemoved':
                 alert('Headset was removed');
             break;
+            case 'headsetOverridden':
+                alert('Headset was overridden');
+            break;
         };
     });
 }, false);
