@@ -13,6 +13,8 @@
         [self.commandDelegate evalJs:@"cordova.require('cordova-plugin-headsetdetection.HeadsetDetection').remoteHeadsetAdded()"];
     } else if ([reason unsignedIntegerValue] == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
         [self.commandDelegate evalJs:@"cordova.require('cordova-plugin-headsetdetection.HeadsetDetection').remoteHeadsetRemoved()"];
+    } else if ([reason unsignedIntegerValue] == AVAudioSessionRouteChangeReasonOverride) {
+        [self.commandDelegate evalJs:@"cordova.require('cordova-plugin-headsetdetection.HeadsetDetection').remoteHeadsetOverridden()"];
     }
 }
 
