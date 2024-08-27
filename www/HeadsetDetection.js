@@ -17,6 +17,9 @@ var HeadsetDetection = {
   },
   remoteHeadsetOverridden: function() {
     this.actionCallback && this.actionCallback('headsetOverridden');
+  },
+  remoteHeadsetNotificationReceived: function() {
+    this.actionCallback && this.actionCallback('headsetNotificationReceived')
   }
 };
 
