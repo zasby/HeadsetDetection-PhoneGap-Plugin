@@ -30,15 +30,15 @@
 
     NSMutableArray *inputs = [NSMutableArray array];
     for (AVAudioSessionPortDescription *desc in [route inputs]) {
-        [inputs addObject:@{ "portName": desc.portName, "portType": desc.portType }];
+        [inputs addObject:@{ @"portName": desc.portName, @"portType": desc.portType }];
     }
 
     NSMutableArray *outputs = [NSMutableArray array];
     for (AVAudioSessionPortDescription *desc in [route outputs]) {
-        [outputs addObject:@{ "portName": desc.portName, "portType": desc.portType }];
+        [outputs addObject:@{ @"portName": desc.portName, @"portType": desc.portType }];
     }
 
-    NSDictionary *result = @{ "inputs": inputs, "outputs": outputs };
+    NSDictionary *result = @{ @"inputs": inputs, @"outputs": outputs };
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
