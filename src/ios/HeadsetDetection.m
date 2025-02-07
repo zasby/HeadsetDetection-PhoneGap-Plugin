@@ -1,4 +1,5 @@
 #import "HeadsetDetection.h"
+#import <AVFoundation/AVFoundation.h>
 
 @implementation HeadsetDetection
 
@@ -21,6 +22,25 @@
 - (void) detect:(CDVInvokedUrlCommand*)command {
   CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:[self isHeadsetEnabled]];
   [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) getAudioDevices:(CDVInvokedUrlCommand*)command {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    AVAudioSessionRouteDescription *route = [session currentRoute];
+
+    NSMutableArray *inputs = [NSMutableArray array];
+    for (AVAudioSessionPortDescription *desc in [route inputs]) {
+        [inputs addObject:@{ "portName": desc.portName, "portType": desc.portType }];
+    }
+
+    NSMutableArray *outputs = [NSMutableArray array];
+    for (AVAudioSessionPortDescription *desc in [route outputs]) {
+        [outputs addObject:@{ "portName": desc.portName, "portType": desc.portType }];
+    }
+
+    NSDictionary *result = @{ "inputs": inputs, "outputs": outputs };
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) registerRemoteEvents:(CDVInvokedUrlCommand*)command {
